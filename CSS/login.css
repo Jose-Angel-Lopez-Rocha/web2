@@ -1,0 +1,70 @@
+/* ===== Estilos generales ===== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== Formulario ===== */
+form {
+    background-color: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    width: 320px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #2d3436;
+}
+
+/* ===== Inputs ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+/* ===== Botón ===== */
+input[type="submit"] {
+    background-color: #0984e3;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #74b9ff;
+}
+
+/* ===== Error ===== */
+h1 + h1 {
+    color: red;
+    font-size: 16px;
+}
+.error {
+    color: #fff;
+    background-color: #e74c3c;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}

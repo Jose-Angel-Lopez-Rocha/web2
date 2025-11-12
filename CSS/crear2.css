@@ -1,0 +1,275 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1a7ebc 0%, #1c7fc1 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ------------------------------
+   Contenedor principal del formulario
+--------------------------------- */
+.formulario_stock {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 900px;
+}
+
+/* ======= Grupo de inputs ======= */
+.formulario_stock__grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ======= Labels ======= */
+.formulario_stock__label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+/* ======= Contenedor de input con icono ======= */
+.formulario_stock__grupo_input {
+    position: relative;
+}
+
+/* ======= Inputs y Select ======= */
+.formulario_stock__input {
+    width: 100%;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 40px 0 15px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: #333;
+}
+
+.formulario_stock__input:focus {
+    border: 2px solid #3d9ef3b5;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.formulario_stock__input::placeholder {
+    color: #aaa;
+}
+
+/* ======= Iconos de validación ======= */
+.formulario_stock__validacion-estado {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* ======= Mensajes de error ======= */
+.formulario_stock__input_error {
+    font-size: 12px;
+    color: #dc3545;
+    margin: 5px 0 0 0;
+    display: none;
+    font-weight: 500;
+}
+
+.formulario_stock__input_error_activo {
+    display: block;
+}
+
+/* ======= Checkbox y términos ======= */
+.formulario_stock__grupo-terminos {
+    grid-column: span 2;
+    margin-top: 10px;
+}
+
+.formulario_stock__grupo-terminos label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    text-transform: none;
+}
+
+.formulario_stock__checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* ======= Mensaje general de error ======= */
+.formulario_stock__mensaje {
+    grid-column: span 2;
+    background-color: #dc3545;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+    text-align: center;
+    font-size: 14px;
+}
+
+.formulario_stock__mensaje-activo {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+.formulario_stock__mensaje i {
+    margin-right: 8px;
+}
+
+/* ======= Contenedor del botón ======= */
+.formulario_stock__grupo-btn-enviar {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* ======= Botón de envío ======= */
+.formulario_stock__btn {
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #2f70c5 0%, #95b3c1 100%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.formulario_stock__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.formulario_stock__btn:active {
+    transform: translateY(0);
+}
+
+/* ======= Mensaje de éxito ======= */
+.formulario_stock__mensaje-exito {
+    display: none;
+    color: #28a745;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.formulario_stock__mensaje-exito-activo {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ======= Estados de validación: CORRECTO ======= */
+.formulario_stock__grupo-correcto .formulario_stock__validacion-estado {
+    color: #28a745;
+    opacity: 1;
+}
+
+.formulario_stock__grupo-correcto .formulario_stock__input {
+    border: 2px solid #28a745;
+    background: #f0fff4;
+}
+
+/* ======= Estados de validación: INCORRECTO ======= */
+.formulario_stock__grupo-incorrecto .formulario_stock__input {
+    border: 2px solid #dc3545;
+    background: #fff5f5;
+}
+
+.formulario_stock__grupo-incorrecto .formulario_stock__validacion-estado {
+    color: #dc3545;
+    opacity: 1;
+}
+
+/* ======= Animaciones ======= */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ======= Responsive Design ======= */
+@media screen and (max-width: 768px) {
+    .formulario_stock {
+        grid-template-columns: 1fr;
+        padding: 30px 20px;
+    }
+    
+    .formulario_stock__grupo-terminos,
+    .formulario_stock__grupo-btn-enviar,
+    .formulario_stock__mensaje {
+        grid-column: 1;
+    }
+    
+    .formulario_stock__btn {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .formulario_stock {
+        padding: 20px 15px;
+        gap: 15px;
+    }
+    
+    body {
+        padding: 10px;
+    }
+}
+.footer{
+    background-color: #242628;
+    padding: 10px ;
+    display: flex;
+    flex-wrap: wrap;
+    color: aliceblue;
+    margin-top: 30px;
+}
