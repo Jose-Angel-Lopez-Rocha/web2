@@ -1,17 +1,42 @@
+
+<?php
+    include("..\PHP\conexion.php");
+    session_start();
+    if (!isset($_SESSION['cliente_rol']) || $_SESSION['cliente_rol'] != 1) {
+            if (!isset($_SESSION['cliente_rol']) || $_SESSION['cliente_rol'] != 3) {
+    echo "<div style='
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 400px;
+        background: #ffe6e6;
+        color: #b30000;
+        border: 2px solid #ff4d4d;
+        border-radius: 10px;
+        font-family: Arial;
+        text-align: center;
+        font-size: 18px;
+    '>❌ No tienes permiso para acceder a esta página.</div>";
+    exit;
+  }
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Usuario</title>
+    <title>Editar cliente</title>
     <link rel="stylesheet" href="..\CSS\crear.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div id="app">
+     <div id="app">
         <!-- Formulario de edición -->
-        <form @submit.prevent="actualizarUsuario" class="formulario1" v-if="!cargando">
-            <h2>Editar Usuario #{{ usuarioId }}</h2>
+        <form @submit.prevent="actualizarCliente" class="formulario1" v-if="!cargando">
+            <h2>Editar cliente #{{ clienteId }}</h2>
 
             <!-- Nombre -->
             <div class="formulario1__grupo" :class="getClaseValidacion('nombre')">
@@ -183,13 +208,13 @@
             </div>
 
             <div class="formulario1__mensaje-exito" v-if="exito">
-                ✓ Usuario actualizado exitosamente
+                ✓ Cliente actualizado exitosamente
             </div>
 
             <!-- Botones -->
             <div class="formulario1__grupo-botones">
                 <button type="submit" class="formulario1__btn" :disabled="enviando">
-                    {{ enviando ? 'Guardando...' : 'Actualizar Usuario' }}
+                    {{ enviando ? 'Guardando...' : 'Actualizar Cliente' }}
                 </button>
             </div>
         </form>

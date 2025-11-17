@@ -90,7 +90,7 @@ body{
 }
 
 .contenedor-botones button:hover {
-    background-color: #5486d1;
+    background-color: #324bca;
     color: white;
     transform: translateY(-3px);
 }

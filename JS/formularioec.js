@@ -3,30 +3,43 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      calzadoId: null,
-      marca: '',
-      talla: '',
-      color: '',
-      stock: '',
-      precio: '',
-      categoria: '',
+      clienteId: null,
+
+      nombre: '',
+      apellido_paterno: '',
+      apellido_materno: '',
+      email: '',
+      clave: '',
+      telefono: '',
+      fecha_nac: '',
+      estado: '',
+      ciudad: '',
+      rol: '',
 
       valid: {
-        marca: true,
-        talla: true,
-        color: true,
-        stock: true,
-        precio: true,
-        categoria: true,
+        nombre: true,
+        apellido_paterno: true,
+        apellido_materno: true,
+        email: true,
+        clave: true,
+        telefono: true,
+        fecha_nac: true,
+        estado: true,
+        ciudad: true,
+        rol: true,
       },
 
       tocado: {
-        marca: false,
-        talla: false,
-        color: false,
-        stock: false,
-        precio: false,
-        categoria: false,
+        nombre: false,
+        apellido_paterno: false,
+        apellido_materno: false,
+        email: false,
+        clave: false,
+        telefono: false,
+        fecha_nac: false,
+        estado: false,
+        ciudad: false,
+        rol: false,
       },
 
       cargando: false,
@@ -38,34 +51,35 @@ createApp({
   },
 
   methods: {
-    // Cargar datos del calzado
-    async cargarCalzado(id) {
+    async cargarCliente(id) {
       this.cargando = true;
-      this.calzadoId = id;
+      this.clienteId = id;
 
       try {
-        console.log('📥 Cargando calzado ID:', id);
-        const response = await fetch(`obtener_calzado.php?id=${id}`);
+        const response = await fetch(`obtener_cliente.php?id=${id}`);
         const resultado = await response.json();
 
         if (resultado.success) {
-          const calzado = resultado.data;
-          this.marca = calzado.marca;
-          this.talla = calzado.talla;
-          this.color = calzado.color;
-          this.stock = calzado.stock;
-          this.precio = calzado.precio;
-          this.categoria = calzado.categoria;
+          const u = resultado.data;
 
-          console.log('✅ Calzado cargado:', calzado);
+          this.nombre = u.nombre;
+          this.apellido_paterno = u.apellido_paterno;
+          this.apellido_materno = u.apellido_materno;
+          this.email = u.email;
+          this.telefono = u.telefono;
+          this.fecha_nac = u.fecha_nac;
+          this.estado = u.estado;
+          this.ciudad = u.ciudad;
+          this.rol = u.rol;
+          this.clave = '';
+
         } else {
           this.mensajeError = resultado.message;
           this.error = true;
         }
       } catch (err) {
-        this.mensajeError = "Error al cargar el calzado";
+        this.mensajeError = "Error al cargar el cliente";
         this.error = true;
-        console.error('❌ Error:', err);
       } finally {
         this.cargando = false;
       }
@@ -73,10 +87,13 @@ createApp({
 
     regex(campo) {
       const reglas = {
-        marca: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
-        color: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
-        stock: /^[1-9]\d*$/,
-        precio: /^\d+(\.\d{1,2})?$/
+        nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
+        apellido_paterno: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
+        apellido_materno: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
+        email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+        telefono: /^[0-9]{10}$/, 
+        estado: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
+        ciudad: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
       };
       return reglas[campo] || /.*/;
     },
@@ -87,16 +104,31 @@ createApp({
     },
 
     validarCampo(campo) {
-      if (campo === 'talla' || campo === 'categoria') {
+      if (campo === 'fecha_nac') {
         this.valid[campo] = this[campo] !== '';
-      } else {
-        this.valid[campo] = this.regex(campo).test(this[campo]);
+        return;
       }
+
+      if (campo === 'rol') {
+        this.valid[campo] = this.rol !== '';
+        return;
+      }
+
+      if (campo === 'clave') {
+        if (this.clave === '') {
+          this.valid.clave = true;
+        } else {
+          this.valid.clave = this.clave.length >= 4;
+        }
+        return;
+      }
+
+      this.valid[campo] = this.regex(campo).test(this[campo]);
     },
 
     getClaseValidacion(campo) {
       if (!this.tocado[campo]) return '';
-      return this.valid[campo] ? 'formulario_stock__grupo-correcto' : 'formulario_stock__grupo-incorrecto';
+      return this.valid[campo] ? 'formulario1__grupo-correcto' : 'formulario1__grupo-incorrecto';
     },
 
     getClaseIcono(campo) {
@@ -109,13 +141,7 @@ createApp({
 
       const todosValidos = Object.values(this.valid).every(v => v);
 
-      console.log('Validación:', this.valid);
-      console.log('¿Válido?:', todosValidos);
-
       if (!todosValidos) {
-        const invalidos = Object.keys(this.valid).filter(k => !this.valid[k]);
-        console.log('Campos inválidos:', invalidos);
-        
         this.mensajeError = "Completa todos los campos correctamente";
         this.error = true;
         setTimeout(() => this.error = false, 5000);
@@ -124,58 +150,48 @@ createApp({
       return todosValidos;
     },
 
-    async actualizarCalzado() {
-      if (!this.validarFormulario()) {
-        console.log('❌ Validación falló');
-        return;
-      }
+    async actualizarCliente() {
+      if (!this.validarFormulario()) return;
 
-      console.log('=== ACTUALIZANDO CALZADO ===');
       this.enviando = true;
 
       const datos = {
-        id: this.calzadoId,
-        marca: this.marca,
-        talla: this.talla,
-        color: this.color,
-        stock: this.stock,
-        precio: this.precio,
-        categoria: this.categoria
+        id: this.clienteId,
+        nombre: this.nombre,
+        apellido_paterno: this.apellido_paterno,
+        apellido_materno: this.apellido_materno,
+        email: this.email,
+        telefono: this.telefono,
+        fecha_nac: this.fecha_nac,
+        estado: this.estado,
+        ciudad: this.ciudad,
+        rol: this.rol,
       };
 
+      if (this.clave !== '') {
+        datos.clave = this.clave;
+      }
+
       try {
-        console.log('📤 Enviando:', datos);
-        
-        const response = await fetch('actualizar_calzado.php', {
+        const response = await fetch('actualizar_cliente.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(datos)
         });
 
-        console.log('📥 Status:', response.status);
         const resultado = await response.json();
-        console.log('📥 Respuesta:', resultado);
 
         if (resultado.success) {
           this.exito = true;
-          this.error = false;
-          console.log('✅ Calzado actualizado');
-
-          setTimeout(() => {
-            this.exito = false;
-            // Opcional: redirigir a lista de calzado
-            // window.location.href = 'lista_calzado.html';
-          }, 2000);
+          setTimeout(() => this.exito = false, 2000);
         } else {
           this.mensajeError = resultado.message;
           this.error = true;
-          console.error('❌', resultado.message);
           setTimeout(() => this.error = false, 5000);
         }
       } catch (err) {
-        this.mensajeError = "Error al actualizar el calzado";
+        this.mensajeError = "Error al actualizar cliente";
         this.error = true;
-        console.error('❌ Error:', err);
         setTimeout(() => this.error = false, 5000);
       } finally {
         this.enviando = false;
@@ -184,16 +200,11 @@ createApp({
   },
 
   mounted() {
-    console.log('✅ Formulario Editar Calzado cargado');
-    
-    // Obtener ID de la URL (ejemplo: editar_calzado.html?id=5)
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-
+    const id = new URLSearchParams(window.location.search).get('id');
     if (id) {
-      this.cargarCalzado(id);
+      this.cargarCliente(id);
     } else {
-      this.mensajeError = "No se especificó ID de calzado";
+      this.mensajeError = "No se especificó ID del cliente";
       this.error = true;
     }
   }

@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, PUT');
+header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 $host = 'localhost';
@@ -13,31 +13,25 @@ $password = '';
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    
     $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!$data) {
-        throw new Exception('No se recibieron datos');
+    
+    if (!$data || !isset($data['id'])) {
+        throw new Exception('Datos inválidos');
     }
+    
 
-    // Validar que venga el ID
-    if (!isset($data['id']) || empty($data['id'])) {
-        throw new Exception('ID de cliente requerido');
-    }
-
-    $sql = "UPDATE clientes SET 
-            nombre = :nombre,
-            apellido_paterno = :apellido_paterno,
-            apellido_materno = :apellido_materno,
-            email = :email,
-            telefono = :telefono,
-            fecha_nac = :fecha_nac,
-            estado = :estado,
-            ciudad = :ciudad
-            WHERE id = :id";
-
-    $stmt = $pdo->prepare($sql);
-
+    $campos = [
+        'nombre = :nombre',
+        'apellido_paterno = :apellido_paterno',
+        'apellido_materno = :apellido_materno',
+        'email = :email',
+        'telefono = :telefono',
+        'fecha_nac = :fecha_nac',
+        'estado = :estado',
+        'ciudad = :ciudad',
+    ];
+    
     $params = [
         ':id' => $data['id'],
         ':nombre' => $data['nombre'],
@@ -47,41 +41,24 @@ try {
         ':telefono' => $data['telefono'],
         ':fecha_nac' => $data['fecha_nac'],
         ':estado' => $data['estado'],
-        ':ciudad' => $data['ciudad']
+        ':ciudad' => $data['ciudad'],
     ];
-
-    // Si viene contraseña nueva, actualizarla
-    if (isset($data['clave']) && !empty($data['clave'])) {
-        $sql = "UPDATE clientes SET 
-                nombre = :nombre,
-                apellido_paterno = :apellido_paterno,
-                apellido_materno = :apellido_materno,
-                email = :email,
-                clave = :clave,
-                telefono = :telefono,
-                fecha_nac = :fecha_nac,
-                estado = :estado,
-                ciudad = :ciudad
-                WHERE id = :id";
-        
-        $stmt = $pdo->prepare($sql);
+    
+    if (!empty($data['clave'])) {
+        $campos[] = 'clave = :clave';
         $params[':clave'] = password_hash($data['clave'], PASSWORD_DEFAULT);
     }
-
+    
+    $sql = "UPDATE clientes SET " . implode(', ', $campos) . " WHERE id = :id";
+    
+    $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
-
-    if ($stmt->rowCount() > 0) {
-        echo json_encode([
-            'success' => true,
-            'message' => 'cliente actualizado exitosamente'
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'No se realizaron cambios o el cliente no existe'
-        ]);
-    }
-
+    
+    echo json_encode([
+        'success' => true,
+        'message' => 'Cliente actualizado exitosamente'
+    ]);
+    
 } catch(PDOException $e) {
     echo json_encode([
         'success' => false,

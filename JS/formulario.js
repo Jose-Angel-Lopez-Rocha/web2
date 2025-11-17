@@ -13,6 +13,7 @@ createApp({
             fecha_nac: "",
             estado: "",
             ciudad: "",
+            rol:"",
             terminos: false,
 
             // Estados de validación
@@ -25,7 +26,8 @@ createApp({
                 telefono: false,
                 fecha_nac: false,
                 estado: false,
-                ciudad: false
+                ciudad: false,
+                rol: false
             },
 
             // Campos tocados
@@ -38,7 +40,8 @@ createApp({
                 telefono: false,
                 fecha_nac: false,
                 estado: false,
-                ciudad: false
+                ciudad: false,
+                rol: false
             },
 
             // Mensajes
@@ -73,6 +76,9 @@ createApp({
                 case 'fecha_nac':
                 case 'estado':
                     this.valid[campo] = this[campo] !== "";
+                    break;
+                 case 'rol':
+                    this.valid[campo] = this[campo] === "2" || this[campo] === "3";
                     break;
             }
         },
@@ -135,7 +141,8 @@ createApp({
                     telefono: this.telefono,
                     fecha_nac: this.fecha_nac,
                     estado: this.estado,
-                    ciudad: this.ciudad
+                    ciudad: this.ciudad,
+                    rol:this.rol
                 };
 
                 console.log('Datos a enviar:', datos);
@@ -194,6 +201,7 @@ createApp({
             this.fecha_nac = "";
             this.estado = "";
             this.ciudad = "";
+            this.rol = "";
             this.terminos = false;
 
             Object.keys(this.valid).forEach(key => this.valid[key] = false);

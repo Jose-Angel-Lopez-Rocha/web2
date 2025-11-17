@@ -10,6 +10,27 @@
     if ($conexion->connect_error) {
         die("Error de conexión: " . $conexion->connect_error);
     }
+    include("..\PHP\conexion.php");
+    session_start();
+    if (!isset($_SESSION['cliente_rol']) || $_SESSION['cliente_rol'] != 1) {
+            if (!isset($_SESSION['cliente_rol']) || $_SESSION['cliente_rol'] != 3) {
+    echo "<div style='
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 400px;
+        background: #ffe6e6;
+        color: #b30000;
+        border: 2px solid #ff4d4d;
+        border-radius: 10px;
+        font-family: Arial;
+        text-align: center;
+        font-size: 18px;
+    '>❌ No tienes permiso para acceder a esta página.</div>";
+    exit;
+  }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +44,7 @@
 <body>
     <h1 class="titulo">Stock</h1>
     <ul class="sidenav">
-        <li><a class="activate" href="index.html">Index</a></li>
+        <li><a class="activate" href="index.php">Index</a></li>
         <li><a href="acerca.html">Acerca de nosotros</a></li>
         <li><a href="clientes.php">Clientes</a></li>
         <li><a href="stock.php">Stock</a></li>

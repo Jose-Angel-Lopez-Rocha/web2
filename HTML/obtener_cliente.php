@@ -21,7 +21,7 @@ try {
         throw new Exception('ID de cliente requerido');
     }
 
-    $sql = "SELECT id, nombre, apellido_paterno, apellido_materno, email, telefono, fecha_nac, estado, ciudad 
+    $sql = "SELECT id, nombre, apellido_paterno, apellido_materno, email, telefono, fecha_nac, estado, ciudad, rol 
             FROM clientes 
             WHERE id = :id";
 

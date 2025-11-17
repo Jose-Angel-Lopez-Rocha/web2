@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,7 +15,7 @@
         <h1 class="titulo">Bienvenidos</h1>
         <nav>
             <ul class="sidenav">
-                <li><a href="index.html">Index</a></li>
+                <li><a href="index.php">Index</a></li>
                 <li><a href="acerca.html">Acerca de nosotros</a></li>
                 <li><a href="clientes.php">Clientes</a></li>
                 <li><a href="stock.php">Stock</a></li>
@@ -28,12 +30,7 @@
         <h4>Información</h4>
         <ul>
             <li><a href="mailto:lopezrochaangel30@gmail.com">Enviar correo</a></li>    
-        </ul>
-        <p>
-            <a href="https://validator.w3.org/">
-            <img src="../imagenes/valid-html40.png" alt="Valid html" style="border:0;width:88px;height:31px">
-            </a>
-        </p>            
+        </ul>    
         <p>
             <a href="https://jigsaw.w3.org/css-validator/check/referer">
                 <img style="border:0;width:88px;height:31px"
@@ -51,4 +48,17 @@
     </footer>
 </body>
 <script src="../js/productos.js"></script>
+
+<?php
+session_start();
+include('../PHP/conexion.php');
+if (isset($_SESSION['cliente_nombre']) && isset($_SESSION['cliente_rol'])) {
+    $nombre = $_SESSION['cliente_nombre'];
+    $rol = $_SESSION['cliente_rol'];
+}
+?>
+
+    <p>Tu nombre es: <strong><?= htmlspecialchars($nombre) ?></strong></p>
+    <p>Tu rol es: <strong><?= htmlspecialchars($rol) ?></strong></p>
 </html>
+

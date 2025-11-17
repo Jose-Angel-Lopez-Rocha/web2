@@ -9,6 +9,25 @@ if($sql==1){
     echo '<div>Error</div>';
     }
 }
+    session_start();
+    if (!isset($_SESSION['cliente_rol']) || $_SESSION['cliente_rol'] != 1) {
+            if (!isset($_SESSION['cliente_rol']) || $_SESSION['cliente_rol'] != 3) {
+    echo "<div style='
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 400px;
+        background: #ffe6e6;
+        color: #b30000;
+        border: 2px solid #ff4d4d;
+        border-radius: 10px;
+        font-family: Arial;
+        text-align: center;
+        font-size: 18px;
+    '>❌ No tienes permiso para acceder a esta página.</div>";
+    exit;
+  }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

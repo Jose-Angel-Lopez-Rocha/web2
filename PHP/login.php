@@ -1,72 +1,31 @@
-<?php
-session_start();
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="../CSS/login.css" rel="stylesheet">
+</head>
+<body>
+    <form action="validar.php" method="post">
+        <h1>Sistema de login registro</h1>
 
-$host = 'localhost';
-$port = '4306';
-$dbname = 'zapateria';
-$username = 'root';
-$password = '';
+        <?php if (isset($error)) { ?>
+            <p class="error"><?= htmlspecialchars($error) ?></p>
+        <?php } ?>
 
-try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        <p>
+            <input type="email" name="email" placeholder="Ingrese su correo" required>
+        </p>
+        <p>
+            <input type="password" name="clave" placeholder="Ingrese su clave" required>
+        </p>
+        <input type="submit" value="Ingresar">
 
-    $data = json_decode(file_get_contents('php://input'), true);
+    <p>
+    <a href="..\HTML\crear_login.php" class="btn-registro">Crear una cuenta</a>
+    </p>
 
-    if (!$data || !isset($data['email']) || !isset($data['clave'])) {
-        throw new Exception('Email y contraseña requeridos');
-    }
-
-    // Buscar usuario con su rol
-    $sql = "SELECT u.id, u.nombre, u.apellido_paterno, u.email, u.clave, u.rol_id, r.nombre as rol_nombre
-            FROM usuarios u
-            INNER JOIN roles r ON u.rol_id = r.id
-            WHERE u.email = :email";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':email' => $data['email']]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$usuario) {
-        throw new Exception('Usuario no encontrado');
-    }
-
-    // Verificar contraseña
-    if (!password_verify($data['clave'], $usuario['clave'])) {
-        throw new Exception('Contraseña incorrecta');
-    }
-
-    // Crear sesión
-    $_SESSION['usuario_id'] = $usuario['id'];
-    $_SESSION['usuario_nombre'] = $usuario['nombre'] . ' ' . $usuario['apellido_paterno'];
-    $_SESSION['usuario_email'] = $usuario['email'];
-    $_SESSION['usuario_rol'] = $usuario['rol_nombre'];
-    $_SESSION['rol_id'] = $usuario['rol_id'];
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Login exitoso',
-        'usuario' => [
-            'id' => $usuario['id'],
-            'nombre' => $usuario['nombre'] . ' ' . $usuario['apellido_paterno'],
-            'email' => $usuario['email'],
-            'rol' => $usuario['rol_nombre']
-        ]
-    ]);
-
-} catch(PDOException $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error de base de datos: ' . $e->getMessage()
-    ]);
-} catch(Exception $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
-}
-?>
+    </form>
+</body>
+</html>

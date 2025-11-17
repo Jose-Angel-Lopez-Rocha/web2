@@ -24,9 +24,14 @@ try {
         throw new Exception('No se recibieron datos');
     }
     
+
+     if (!isset($data['rol']) || !in_array($data['rol'], ['2', '3'], true)) {
+        throw new Exception('Rol inválido. Solo se permite Cliente (2) o Vendedor (3)');
+    }
+
     // Preparar la consulta SQL
-    $sql = "INSERT INTO clientes (nombre, apellido_paterno, apellido_materno, email, clave, telefono, fecha_nac, estado, ciudad) 
-            VALUES (:nombre, :apellido_paterno, :apellido_materno, :email, :clave, :telefono, :fecha_nac, :estado, :ciudad)";
+    $sql = "INSERT INTO clientes (nombre, apellido_paterno, apellido_materno, email, clave, telefono, fecha_nac, estado, ciudad, rol) 
+            VALUES (:nombre, :apellido_paterno, :apellido_materno, :email, :clave, :telefono, :fecha_nac, :estado, :ciudad, :rol)";
     
     $stmt = $pdo->prepare($sql);
     
@@ -43,7 +48,8 @@ try {
         ':telefono' => $data['telefono'],
         ':fecha_nac' => $data['fecha_nac'],
         ':estado' => $data['estado'],
-        ':ciudad' => $data['ciudad']
+        ':ciudad' => $data['ciudad'],
+        ':rol' => $data['rol']
     ]);
     
     // Respuesta exitosa
